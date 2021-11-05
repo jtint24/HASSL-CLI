@@ -9,7 +9,7 @@ To properly install this tool, just copy the two attatched files, shBox.java and
 Once this is done, you can run HASSL scripts from a text file by using this command in Terminal:
 
 ```
-hassl.sh < input.txt
+hassl.sh input.txt
 ```
 
 Where input.txt contains the HASSL script. 
