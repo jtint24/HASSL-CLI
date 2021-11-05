@@ -7,7 +7,7 @@ import java.lang.ProcessBuilder;
 
 class ShBox {
   public static void main(String[] args) {
-    String[] codeLines = args[0].split("\\n");
+    String[] codeLines = args[0].split("\n");
     Box myBox = new Box(".   ");
     //System.out.println("arg length: "+args.length);
     for (int i = 0; i<codeLines.length; i++) {
@@ -702,6 +702,13 @@ class ShBox {
           retParser.operator = "len";
           return retParser;
         }
+        if (minParenGpost3 == 1 & str.substring(0, 3).equals("at#")) {
+          Parser retParser = new Parser();
+          retParser.input1 = fromString(str.substring(3, str.length()));
+          retParser.numInputs = 1;
+          retParser.operator = "at#";
+          return retParser;
+        }
         if (minParenGpost1 == 1 & str.charAt(0) == '!') {
           Parser retParser = new Parser();
           retParser.input1 = fromString(str.substring(1, str.length()));
@@ -776,6 +783,19 @@ class ShBox {
             case "rdm":
               return "" + Math.random() * Float.parseFloat(input1.value());
             case "len":
+              return "" + input1.value().length();
+            case "at#":
+              if (isNumeric(input1.value())) {
+                return data[Integer.parseInt(input1.value())];
+              } else {
+                for (int i = 0; i<varNames.length; i++) {
+                  if (varNames[i]!=null) {
+                    if (varNames[i] == input1.value()) {
+                      return data[i];
+                    }
+                  }
+                }
+              }
               return "" + input1.value().length();
             case "!":
               return input1.value().equals("TRUE") ? "FALSE" : "TRUE";
@@ -919,6 +939,8 @@ class ShBox {
             return "Number";
           case "len":
             return "Number";
+          case "at#":
+            return "Ambiguous";
           default:
             return "ERROR";
         }
