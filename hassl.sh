@@ -1,8 +1,19 @@
 #!/bin/bash
-function hassl () {
-     cd /usr/local/bin
-     java shBox.java $1
-     cd -
-}
 
-hassl
+filename="$1"
+code=""
+newline=$'\n'
+
+while read -r line; do
+    name="$line"
+    code="$code $newline $name"
+done < "$filename"
+
+#echo $code
+
+cd /usr/local/bin
+javac shBox.java
+java ShBox "$code"
+cd -
+
+
