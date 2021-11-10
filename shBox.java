@@ -65,7 +65,7 @@ class ShBox {
 
     private boolean isNumeric(String str) {
       try {
-        float f = Float.parseFloat(str);
+        float f = Float.valueOf(str);
         return true;
       } catch (Exception e) {
         return false;
@@ -368,7 +368,7 @@ class ShBox {
         if (i >= code.size()) {
           break;
         }
-        if (maxLineCount >= 50000) {
+        if (maxLineCount >= 10000000) {
           System.out.println("Error on line " + i + "! Details: Maximum runtime exceeded");
           break;
         }
@@ -695,6 +695,13 @@ class ShBox {
           retParser.operator = "rdm";
           return retParser;
         }
+        if (minParenGpost3 == 1 & str.substring(0, 3).equals("sqt")) {
+          Parser retParser = new Parser();
+          retParser.input1 = fromString(str.substring(3, str.length()));
+          retParser.numInputs = 1;
+          retParser.operator = "sqt";
+          return retParser;
+        }
         if (minParenGpost3 == 1 & str.substring(0, 3).equals("len")) {
           Parser retParser = new Parser();
           retParser.input1 = fromString(str.substring(3, str.length()));
@@ -735,7 +742,7 @@ class ShBox {
           return false;
         }
         try {
-          float f = Float.parseFloat(str);
+          float f = Float.valueOf(str);
         } catch (NumberFormatException nfe) {
           return false;
         }
@@ -767,21 +774,23 @@ class ShBox {
         } else if (numInputs == 1) {
           switch (operator) {
             case "log":
-              return "" + Math.log(Float.parseFloat(input1.value()));
+              return "" + Math.log(Float.valueOf(input1.value()));
             case "sin":
-              return "" + Math.sin(Float.parseFloat(input1.value()));
+              return "" + Math.sin(Float.valueOf(input1.value()));
             case "cos":
-              return "" + Math.cos(Float.parseFloat(input1.value()));
+              return "" + Math.cos(Float.valueOf(input1.value()));
             case "tan":
-              return "" + Math.tan(Float.parseFloat(input1.value()));
+              return "" + Math.tan(Float.valueOf(input1.value()));
             case "rnd":
-              return "" + Math.round(Float.parseFloat(input1.value()));
+              return "" + Math.round(Float.valueOf(input1.value()));
             case "flr":
-              return "" + Math.floor(Float.parseFloat(input1.value()));
+              return "" + Math.floor(Float.valueOf(input1.value()));
             case "cel":
-              return "" + Math.ceil(Float.parseFloat(input1.value()));
+              return "" + Math.ceil(Float.valueOf(input1.value()));
+            case "sqt":
+              return "" + Math.sqrt(Float.valueOf(input1.value()));
             case "rdm":
-              return "" + Math.random() * Float.parseFloat(input1.value());
+              return "" + Math.random() * Float.valueOf(input1.value());
             case "len":
               return "" + input1.value().length();
             case "at#":
@@ -805,38 +814,37 @@ class ShBox {
         } else if (numInputs == 2) {
           switch (operator) {
             case "+":
-              return "" + (Float.parseFloat(input1.value()) + Float.parseFloat(input2.value()));
+              return "" + (Float.valueOf(input1.value()) + Float.valueOf(input2.value()));
             case "-":
-              return "" + (Float.parseFloat(input1.value()) - Float.parseFloat(input2.value()));
+              return "" + (Float.valueOf(input1.value()) - Float.valueOf(input2.value()));
             case "*":
-              return "" + (Float.parseFloat(input1.value()) * Float.parseFloat(input2.value()));
+              return "" + (Float.valueOf(input1.value()) * Float.valueOf(input2.value()));
             case "/":
-              return "" + (Float.parseFloat(input1.value()) / Float.parseFloat(input2.value()));
+              return "" + (Float.valueOf(input1.value()) / Float.valueOf(input2.value()));
             case "%":
-              return "" + (Float.parseFloat(input1.value()) % Float.parseFloat(input2.value()));
+              return "" + (Float.valueOf(input1.value()) % Float.valueOf(input2.value()));
             case "^":
-              return "" + (Math.pow(Float.parseFloat(input1.value()), Float.parseFloat(input2.value())));
+              return "" + (Math.pow(Float.valueOf(input1.value()), Float.valueOf(input2.value())));
             case "&":
               return input1.value() + input2.value();
             case "$":
-              return "" + input1.value()
-                      .charAt((int) Math.min(input1.value().length(), (int) Float.parseFloat(input2.value())));
+              return "" + input1.value().charAt((int) Math.min(input1.value().length(), (int) Float.parseFloat(input2.value())));
             case "==":
               if (isNumeric(input1.value()) && isNumeric(input2.value())) {
-                return (Float.parseFloat(input1.value()) == Float.parseFloat(input2.value()) ? "TRUE" : "FALSE");
+                return (Float.valueOf(input1.value()) == Float.valueOf(input2.value()) ? "TRUE" : "FALSE");
               } else {
                 return (input1.value().equals(input2.value()) ? "TRUE" : "FALSE");
               }
             case "!=":
               return (input1.value().equals(input2.value()) ? "FALSE" : "TRUE");
             case "<":
-              return (Float.parseFloat(input1.value()) < Float.parseFloat(input2.value())) ? "TRUE" : "FALSE";
+              return (Float.valueOf(input1.value()) < Float.valueOf(input2.value())) ? "TRUE" : "FALSE";
             case ">":
-              return (Float.parseFloat(input1.value()) > Float.parseFloat(input2.value())) ? "TRUE" : "FALSE";
+              return (Float.valueOf(input1.value()) > Float.valueOf(input2.value())) ? "TRUE" : "FALSE";
             case "<=":
-              return (Float.parseFloat(input1.value()) <= Float.parseFloat(input2.value())) ? "TRUE" : "FALSE";
+              return (Float.valueOf(input1.value()) <= Float.valueOf(input2.value())) ? "TRUE" : "FALSE";
             case ">=":
-              return Float.parseFloat(input1.value()) >= Float.parseFloat(input2.value()) ? "TRUE" : "FALSE";
+              return Float.valueOf(input1.value()) >= Float.valueOf(input2.value()) ? "TRUE" : "FALSE";
             case "&&":
               return (input1.value().equals("TRUE") && input2.value().equals("TRUE")) ? "TRUE" : "FALSE";
             case "||":
@@ -938,6 +946,8 @@ class ShBox {
           case "rdm":
             return "Number";
           case "len":
+            return "Number";
+          case "sqt":
             return "Number";
           case "at#":
             return "Ambiguous";
