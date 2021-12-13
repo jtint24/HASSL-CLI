@@ -1,6 +1,6 @@
 # HASSL-CLI
 
-HASSL is a language I'm developing that runs in the JVM. This repository provides a way to run HASSL files in BASH.
+HASSL is a language I'm developing that runs in the JVM. This repository provides a way to run HASSL files in zsh.
 
 ## Setup
 
